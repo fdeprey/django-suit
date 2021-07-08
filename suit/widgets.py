@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import Textarea, TextInput, ClearableFileInput
 from django.utils.safestring import mark_safe
+from django.contrib.admin.widgets import AdminTimeWidget, AdminDateWidget
+from django.utils.translation import ugettext as _
 
 
 class AutosizedTextarea(Textarea):
@@ -24,6 +26,37 @@ class AutosizedTextarea(Textarea):
         return output
 
 
+#
+# Original date widgets with addition html
+#
+class SuitDateWidget(AdminDateWidget):
+    def __init__(self, attrs=None, format=None):
+        defaults = {'placeholder': _('Date:')[:-1]}
+        new_attrs = _make_attrs(attrs, defaults, "vDateField input-small")
+        super(SuitDateWidget, self).__init__(attrs=new_attrs, format=format)
+
+    def render(self, name, value, attrs=None, renderer=None):
+        output = super(SuitDateWidget, self).render(name, value, attrs, renderer)
+        return mark_safe(
+            '<div class="input-append suit-date">%s<span '
+            'class="add-on"><i class="icon-calendar"></i></span></div>' %
+            output)
+
+
+class SuitTimeWidget(AdminTimeWidget):
+    def __init__(self, attrs=None, format=None):
+        defaults = {'placeholder': _('Time:')[:-1]}
+        new_attrs = _make_attrs(attrs, defaults, "vTimeField input-small")
+        super(SuitTimeWidget, self).__init__(attrs=new_attrs, format=format)
+
+    def render(self, name, value, attrs=None, renderer=None):
+        output = super(SuitTimeWidget, self).render(name, value, attrs, renderer)
+        return mark_safe(
+            '<div class="input-append suit-date suit-time">%s<span '
+            'class="add-on"><i class="icon-time"></i></span></div>' %
+            output)
+
+
 class CharacterCountTextarea(AutosizedTextarea):
     """
     TextArea with character count. Supports also twitter specific count.
@@ -39,7 +72,7 @@ class CharacterCountTextarea(AutosizedTextarea):
 
 class ImageWidget(ClearableFileInput):
     def render(self, name, value, attrs=None, renderer=None):
-        html = super(ImageWidget, self).render(name, value, attrs,renderer)
+        html = super(ImageWidget, self).render(name, value, attrs, renderer)
         if not value or not hasattr(value, 'url') or not value.url:
             return html
         html = u'<div class="ImageWidget"><div class="float-xs-left">' \

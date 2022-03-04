@@ -1,6 +1,5 @@
 from copy import deepcopy
-from django.utils.translation import ugettext_lazy as _
-
+from django.utils.translation import gettext_lazy as _
 
 class ChildItem(object):
     def __init__(self, label=None, model=None, url=None, target_blank=False, permissions=None):

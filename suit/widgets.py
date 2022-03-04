@@ -2,7 +2,7 @@ from django import forms
 from django.forms import Textarea, TextInput, ClearableFileInput
 from django.utils.safestring import mark_safe
 from django.contrib.admin.widgets import AdminTimeWidget, AdminDateWidget
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 
 
 class AutosizedTextarea(Textarea):
